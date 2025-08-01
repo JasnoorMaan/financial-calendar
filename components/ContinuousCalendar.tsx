@@ -1,9 +1,17 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  PriceUp,
+  PriceDown,
+  PriceFlat,
+  VolatilityHigh,
+  VolatilityLow,
+} from "@/components/icons/TileIcons";
+import { CalcedData } from "@/app/types/types";
 
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const monthNames = [
+const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_NAMES = [
   "January",
   "February",
   "March",
@@ -19,62 +27,66 @@ const monthNames = [
 ];
 
 interface ContinuousCalendarProps {
-  onClick?: (_day: number, _month: number, _year: number) => void;
+  onClick?: (day: number, month: number, year: number) => void;
+  startDate?: string | null;
+  endDate?: string | null;
+  financialData?: CalcedData[];
+  showVisualizations?: boolean;
 }
 
 export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   onClick,
+  startDate,
+  endDate,
+  financialData = [],
+  showVisualizations = false,
 }) => {
   const today = new Date();
   const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState<number>(0);
-  const monthOptions = monthNames.map((month, index) => ({
-    name: month,
-    value: `${index}`,
-  }));
+  const [year, setYear] = useState<number>(today.getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number>(today.getMonth());
 
+  // Helper functions for financial data
+  const getFinancialDataForDate = (
+    dateString: string
+  ): CalcedData | undefined => {
+    return financialData.find((data) => data.date === dateString);
+  };
+
+  const formatDateString = (
+    year: number,
+    month: number,
+    day: number
+  ): string => {
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
+  };
+
+  // Scrolling function for full page layout
   const scrollToDay = (monthIndex: number, dayIndex: number) => {
-    const targetDayIndex = dayRefs.current.findIndex(
-      (ref) =>
-        ref &&
-        ref.getAttribute("data-month") === `${monthIndex}` &&
-        ref.getAttribute("data-day") === `${dayIndex}`
-    );
+    setTimeout(() => {
+      const targetElement = dayRefs.current.find((ref) => {
+        if (!ref) return false;
+        const refMonth = parseInt(ref.getAttribute("data-month") || "-1");
+        const refDay = parseInt(ref.getAttribute("data-day") || "-1");
+        const refYear = parseInt(ref.getAttribute("data-year") || "-1");
+        return (
+          refMonth === monthIndex && refDay === dayIndex && refYear === year
+        );
+      });
 
-    const targetElement = dayRefs.current[targetDayIndex];
-
-    if (targetDayIndex !== -1 && targetElement) {
-      const container = document.querySelector(".calendar-container");
-      const elementRect = targetElement.getBoundingClientRect();
-      const is2xl = window.matchMedia("(min-width: 1536px)").matches;
-      const offsetFactor = is2xl ? 3 : 2.5;
-
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
+      if (targetElement) {
+        const elementRect = targetElement.getBoundingClientRect();
         const offset =
-          elementRect.top -
-          containerRect.top -
-          containerRect.height / offsetFactor +
-          elementRect.height / 2;
-
-        container.scrollTo({
-          top: container.scrollTop + offset,
-          behavior: "smooth",
-        });
-      } else {
-        const offset =
-          window.scrollY +
-          elementRect.top -
-          window.innerHeight / offsetFactor +
-          elementRect.height / 2;
+          window.scrollY + elementRect.top - window.innerHeight / 3;
 
         window.scrollTo({
-          top: offset,
+          top: Math.max(0, offset),
           behavior: "smooth",
         });
       }
-    }
+    }, 100);
   };
 
   const handlePrevYear = () => setYear((prevYear) => prevYear - 1);
@@ -83,51 +95,84 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const monthIndex = parseInt(event.target.value, 10);
     setSelectedMonth(monthIndex);
-    scrollToDay(monthIndex, 1);
+    setTimeout(() => {
+      scrollToDay(monthIndex, 15);
+    }, 100);
   };
 
   const handleTodayClick = () => {
-    setYear(today.getFullYear());
-    scrollToDay(today.getMonth(), today.getDate());
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDay = today.getDate();
+
+    setYear(todayYear);
+    setSelectedMonth(todayMonth);
+
+    setTimeout(() => {
+      scrollToDay(todayMonth, todayDay);
+    }, 300);
   };
 
   const handleDayClick = (day: number, month: number, year: number) => {
-    if (!onClick) {
-      return;
-    }
+    if (!onClick) return;
+
     if (month < 0) {
       onClick(day, 11, year - 1);
+    } else if (month === 12) {
+      onClick(day, 0, year + 1);
     } else {
       onClick(day, month, year);
     }
   };
 
   const generateCalendar = useMemo(() => {
-    const today = new Date();
-
-    const daysInYear = (): { month: number; day: number }[] => {
+    const daysInYear = (): {
+      month: number;
+      day: number;
+      actualYear: number;
+      actualMonth: number;
+    }[] => {
       const daysInYear = [];
       const startDayOfWeek = new Date(year, 0, 1).getDay();
 
+      // Add previous month days if needed
       if (startDayOfWeek < 6) {
+        const prevYearLastMonth = new Date(year - 1, 11, 31).getDate();
         for (let i = 0; i < startDayOfWeek; i++) {
-          daysInYear.push({ month: -1, day: 32 - startDayOfWeek + i });
+          const day = prevYearLastMonth - startDayOfWeek + i + 1;
+          daysInYear.push({
+            month: -1,
+            day: day,
+            actualYear: year - 1,
+            actualMonth: 11,
+          });
         }
       }
 
+      // Add current year days
       for (let month = 0; month < 12; month++) {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-
         for (let day = 1; day <= daysInMonth; day++) {
-          daysInYear.push({ month, day });
+          daysInYear.push({
+            month,
+            day,
+            actualYear: year,
+            actualMonth: month,
+          });
         }
       }
 
+      // Add next month days to complete the last week
       const lastWeekDayCount = daysInYear.length % 7;
       if (lastWeekDayCount > 0) {
         const extraDaysNeeded = 7 - lastWeekDayCount;
         for (let day = 1; day <= extraDaysNeeded; day++) {
-          daysInYear.push({ month: 0, day });
+          daysInYear.push({
+            month: 12,
+            day,
+            actualYear: year + 1,
+            actualMonth: 0,
+          });
         }
       }
 
@@ -135,108 +180,187 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
     };
 
     const calendarDays = daysInYear();
-
     const calendarWeeks = [];
+
     for (let i = 0; i < calendarDays.length; i += 7) {
       calendarWeeks.push(calendarDays.slice(i, i + 7));
     }
 
-    const calendar = calendarWeeks.map((week, weekIndex) => (
+    return calendarWeeks.map((week, weekIndex) => (
       <div className="flex w-full" key={`week-${weekIndex}`}>
-        {week.map(({ month, day }, dayIndex) => {
+        {week.map(({ month, day, actualYear, actualMonth }, dayIndex) => {
           const index = weekIndex * 7 + dayIndex;
           const isNewMonth =
             index === 0 || calendarDays[index - 1].month !== month;
           const isToday =
-            today.getMonth() === month &&
+            today.getMonth() === actualMonth &&
             today.getDate() === day &&
-            today.getFullYear() === year;
+            today.getFullYear() === actualYear;
+
+          // Date string for comparison
+          const dateString = formatDateString(actualYear, actualMonth, day);
+          const financialInfo = getFinancialDataForDate(dateString);
+
+          // Determine if this date is start or end date
+          const isStartDate = startDate === dateString;
+          const isEndDate = endDate === dateString;
+
+          // Background and border styling
+          let backgroundClass = "bg-white";
+          let borderClass = "border-gray-200";
+
+          // Apply financial data coloring FIRST
+          if (showVisualizations && financialInfo) {
+            if (financialInfo.volumeHeatmapColor) {
+              backgroundClass = financialInfo.volumeHeatmapColor;
+            } else {
+              // Fallback coloring based on volume level
+              if (financialInfo.volumeLevel === "high") {
+                const intensity = financialInfo.volumeIntensity || 0;
+                if (intensity > 0.8) backgroundClass = "bg-red-500";
+                else if (intensity > 0.6) backgroundClass = "bg-red-400";
+                else if (intensity > 0.4) backgroundClass = "bg-red-300";
+                else backgroundClass = "bg-red-200";
+              } else if (financialInfo.volumeLevel === "medium") {
+                const intensity = financialInfo.volumeIntensity || 0;
+                if (intensity > 0.6) backgroundClass = "bg-yellow-400";
+                else if (intensity > 0.3) backgroundClass = "bg-yellow-300";
+                else backgroundClass = "bg-yellow-200";
+              } else if (financialInfo.volumeLevel === "low") {
+                const intensity = financialInfo.volumeIntensity || 0;
+                if (intensity > 0.6) backgroundClass = "bg-green-400";
+                else if (intensity > 0.3) backgroundClass = "bg-green-300";
+                else backgroundClass = "bg-green-200";
+              }
+            }
+          }
+
+          // Override with selection styling
+          if (isStartDate) {
+            backgroundClass = "bg-blue-400";
+            borderClass = "border-blue-600 border-4";
+          } else if (isEndDate) {
+            backgroundClass = "bg-blue-400";
+            borderClass = "border-blue-600 border-4";
+          }
 
           return (
             <div
-              key={`${month}-${day}`}
+              key={`${actualYear}-${actualMonth}-${day}`}
               ref={(el) => {
                 dayRefs.current[index] = el;
               }}
-              data-month={month}
+              data-month={actualMonth}
               data-day={day}
+              data-year={actualYear}
               onClick={() => handleDayClick(day, month, year)}
-              className={`relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-20 hover:border-cyan-400 sm:-m-px sm:size-20 sm:rounded-2xl sm:border-2 lg:size-36 lg:rounded-3xl 2xl:size-40`}
+              className={`relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-30 hover:border-cyan-400 sm:-m-px sm:size-20 sm:rounded-2xl sm:border-2 lg:size-36 lg:rounded-3xl 2xl:size-40 ${backgroundClass} ${borderClass}`}
             >
               <span
                 className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${
                   isToday ? "bg-blue-500 font-semibold text-white" : ""
-                } ${month < 0 ? "text-slate-400" : "text-slate-800"}`}
+                } ${
+                  month < 0 || month === 12
+                    ? "text-slate-400"
+                    : "text-slate-800"
+                }`}
               >
                 {day}
               </span>
-              {isNewMonth && (
+
+              {/* Month label */}
+              {isNewMonth && month >= 0 && month < 12 && (
                 <span className="absolute bottom-0.5 left-0 w-full truncate px-1.5 text-sm font-semibold text-slate-300 sm:bottom-0 sm:text-lg lg:bottom-2.5 lg:left-3.5 lg:-mb-1 lg:w-fit lg:px-0 lg:text-xl 2xl:mb-[-4px] 2xl:text-2xl">
-                  {monthNames[month]}
+                  {MONTH_NAMES[month]}
                 </span>
               )}
-              <button
-                type="button"
-                className="absolute right-2 top-2 rounded-full opacity-0 transition-all focus:opacity-100 group-hover:opacity-100"
-              >
-                <svg
-                  className="size-8 scale-90 text-blue-500 transition-all hover:scale-100 group-focus:scale-100"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
+
+              {/* Financial data indicators */}
+              {showVisualizations && financialInfo && (
+                <div className="absolute top-1 right-1 flex flex-col gap-1">
+                  {/* Price direction indicators */}
+                  {financialInfo.priceDirection === "up" && <PriceUp />}
+                  {financialInfo.priceDirection === "down" && <PriceDown />}
+                  {financialInfo.priceDirection === "flat" && <PriceFlat />}
+
+                  {/* Volatility level indicators */}
+                  {financialInfo.volatility > 8 && <VolatilityHigh />}
+                  {financialInfo.volatility > 3 &&
+                    financialInfo.volatility <= 8 && (
+                      <div className="w-4 h-4 bg-orange-400 rounded-full drop-shadow-lg"></div>
+                    )}
+                  {financialInfo.volatility <= 3 && <VolatilityLow />}
+                </div>
+              )}
+
+              {/* Start/End date banners */}
+              {isStartDate && (
+                <div className="flex justify-center items-center absolute inset-x-0 top-1 z-20 pointer-events-none">
+                  <div className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg border-2 border-white">
+                    START
+                  </div>
+                </div>
+              )}
+              {isEndDate && (
+                <div className="flex justify-center items-center absolute inset-x-0 top-1 z-20 pointer-events-none">
+                  <div className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-lg border-2 border-white">
+                    END
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
       </div>
     ));
+  }, [year, financialData, showVisualizations, startDate, endDate]);
 
-    return calendar;
-  }, [year]);
-
+  // Fixed intersection observer
   useEffect(() => {
-    const calendarContainer = document.querySelector(".calendar-container");
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const month = parseInt(
-              entry.target.getAttribute("data-month")!,
+              entry.target.getAttribute("data-month") || "-1",
               10
             );
-            setSelectedMonth(month);
+            const elementYear = parseInt(
+              entry.target.getAttribute("data-year") || "-1",
+              10
+            );
+
+            if (month >= 0 && month < 12 && elementYear === year) {
+              setSelectedMonth(month);
+            }
           }
         });
       },
       {
-        root: calendarContainer,
-        rootMargin: "-75% 0px -25% 0px",
-        threshold: 0,
+        root: null,
+        rootMargin: "-40% 0px -40% 0px",
+        threshold: 0.1,
       }
     );
 
     dayRefs.current.forEach((ref) => {
-      if (ref && ref.getAttribute("data-day") === "15") {
-        observer.observe(ref);
+      if (ref) {
+        const day = parseInt(ref.getAttribute("data-day") || "-1");
+        const month = parseInt(ref.getAttribute("data-month") || "-1");
+        if (day === 15 && month >= 0 && month < 12) {
+          observer.observe(ref);
+        }
       }
     });
 
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+    return () => observer.disconnect();
+  }, [year, generateCalendar]);
 
+  const monthOptions = MONTH_NAMES.map((month, index) => ({
+    name: month,
+    value: `${index}`,
+  }));
+  //TOP BAR
   return (
     <div className="no-scrollbar calendar-container max-h-full overflow-y-scroll rounded-t-2xl bg-white pb-10 text-slate-800 shadow-xl">
       <div className="sticky -top-px z-50 w-full rounded-t-2xl bg-white px-5 pt-7 sm:px-8 sm:pt-8">
@@ -255,17 +379,13 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
             >
               Today
             </button>
-            {/* <button
-              type="button"
-              className="whitespace-nowrap rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-3 py-1.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-cyan-300 sm:rounded-xl lg:px-5 lg:py-2.5"
-            >
-              + Add Event
-            </button> */}
           </div>
           <div className="flex w-fit items-center justify-between">
             <button
               onClick={handlePrevYear}
               className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2"
+              aria-label="Previous year"
+              title="Previous year"
             >
               <svg
                 className="size-5 text-slate-800"
@@ -291,6 +411,8 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
             <button
               onClick={handleNextYear}
               className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2"
+              aria-label="Next year"
+              title="Next year"
             >
               <svg
                 className="size-5 text-slate-800"
@@ -312,8 +434,9 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
             </button>
           </div>
         </div>
+
         <div className="grid w-full grid-cols-7 justify-between text-slate-500">
-          {daysOfWeek.map((day, index) => (
+          {DAYS_OF_WEEK.map((day, index) => (
             <div
               key={index}
               className="w-full border-b border-slate-200 py-2 text-center font-semibold"
@@ -333,7 +456,7 @@ export interface SelectProps {
   value: string;
   label?: string;
   options: { name: string; value: string }[];
-  onChange: (_event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
 }
 
