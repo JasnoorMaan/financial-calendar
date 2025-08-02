@@ -6,6 +6,8 @@ import { ContinuousCalendar } from "@/components/ContinuousCalendar";
 import { useDate } from "@/app/hooks/useDate";
 import { useFinancialData } from "@/app/hooks/useAPI";
 import { Charts } from "@/components/Charts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Legend from "@/components/Legend";
 import {
   PriceUp,
   PriceDown,
@@ -202,56 +204,47 @@ export default function Wrapper() {
             </div>
           )}
         </div>
-        <div className="flex flex-row text-md gap-2 items-center justify-evenly rounded-lg border p-2">
-          <div className="flex flex-row space-x-2">
-            <span className="font-bold">Price</span>{" "}
-            <div className="flex flex-row flex-wrap">
-              <PriceUp />
-              <span className="">Up</span>
-              <PriceDown />
-              <span className="">Down</span>
-              <PriceFlat />
-              <span className="">Flat</span>
+        {/* Tab Selector */}
+        <Tabs defaultValue="calendar" className="w-full">
+          <div className="flex justify-center mb-4">
+            <TabsList className="flex justify-center mb-4">
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              {financialData.length > 0 ? (
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              ) : (
+                <TabsTrigger value="dashboard" disabled>
+                  Dashboard
+                </TabsTrigger>
+              )}
+            </TabsList>
+          </div>
+          <TabsContent value="calendar" className="w-full space-y-4">
+            <Legend />
+            {/* Calendar */}
+            <div className="w-full overflow-hidden">
+              <ContinuousCalendar
+                onClick={handleDateSelect}
+                startDate={dateSelection.startDate}
+                endDate={dateSelection.endDate}
+                financialData={financialData}
+                showVisualizations={financialData.length > 0}
+              />
             </div>
-          </div>
-          <div className="flex flex-row space-x-2">
-            <div className="flex flex-row flex-wrap">
-              <VolatilityHigh />{" "}
-              <div className="w-4 h-4 bg-orange-400 rounded-full"></div>{" "}
-              <VolatilityLow />
-            </div>
-            <span>Volatility High/Med/Low</span>
-          </div>
-          <div className="flex flex-row space-x-2">
-            <div className="flex flex-row flex-wrap space-x-1">
-              <div className="w-4 h-4 bg-green-200 rounded"></div>
-              <div className="w-4 h-4 bg-yellow-200 rounded"></div>
-              <div className="w-4 h-4 bg-red-400 rounded"></div>
-            </div>
-            <span>Volume Low/Med/High</span>
-          </div>
-        </div>
-        {/* Calendar */}
-        <div className="flex-1 overflow-hidden">
-          <ContinuousCalendar
-            onClick={handleDateSelect}
-            startDate={dateSelection.startDate}
-            endDate={dateSelection.endDate}
-            financialData={financialData}
-            showVisualizations={financialData.length > 0}
-          />
-        </div>
-        {/* Errors */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-red-800 text-sm">❌ {error}</p>
-          </div>
-        )}
-        {financialData.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-4">
-            <Charts financialData={financialData} symbol={symbol} />
-          </div>
-        )}
+            {/* Errors */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-800 text-sm">❌ {error}</p>
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="dashboard">
+            {financialData.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm border p-4">
+                <Charts financialData={financialData} symbol={symbol} />
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );
