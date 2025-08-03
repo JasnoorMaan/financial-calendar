@@ -1,12 +1,18 @@
-import { useState, useCallback } from "react";
-import { DateSelection } from "@/app/types/types";
+import { useCallback } from 'react';
+import { DateSelection } from '@/app/types/types';
+import { usePersistentState } from './usePersistentState';
 
-export const useDate = () => {
-  const [dateSelection, setDateSelection] = useState<DateSelection>({
-    startDate: null,
-    endDate: null,
-    selectedDates: [],
-  });
+const DEFAULT_DATE_SELECTION: DateSelection = {
+  startDate: null,
+  endDate: null,
+  selectedDates: [],
+};
+
+export const usePersistentDate = () => {
+  const [dateSelection, setDateSelection, clearDateSelection] = usePersistentState(
+    'financial-calendar-date-selection',
+    DEFAULT_DATE_SELECTION
+  );
 
   const selectDate = useCallback((day: number, month: number, year: number) => {
     const date = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -38,15 +44,11 @@ export const useDate = () => {
     });
 
     return date;
-  }, []);
+  }, [setDateSelection]);
 
   const clearSelection = useCallback(() => {
-    setDateSelection({
-      startDate: null,
-      endDate: null,
-      selectedDates: []
-    });
-  }, []);
+    clearDateSelection();
+  }, [clearDateSelection]);
 
   const isValidSelection = dateSelection.startDate && dateSelection.endDate && 
                           dateSelection.startDate !== dateSelection.endDate;

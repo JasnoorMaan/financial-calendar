@@ -1,4 +1,4 @@
-import { RawData, CalcedData } from '@/app/types/types';
+import { RawData, CalcedData } from "@/app/types/types";
 
 export const FinancialUtils = {
   // Calculate percentile for volume ranking

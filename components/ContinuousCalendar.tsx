@@ -7,6 +7,7 @@ import {
   PriceFlat,
   VolatilityHigh,
   VolatilityLow,
+  VolatilityWave,
 } from "@/components/icons/TileIcons";
 import { CalcedData } from "@/app/types/types";
 
@@ -286,9 +287,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
                   {/* Volatility level indicators */}
                   {financialInfo.volatility > 8 && <VolatilityHigh />}
                   {financialInfo.volatility > 3 &&
-                    financialInfo.volatility <= 8 && (
-                      <div className="w-4 h-4 bg-orange-400 rounded-full drop-shadow-lg"></div>
-                    )}
+                    financialInfo.volatility <= 8 && <VolatilityWave />}
                   {financialInfo.volatility <= 3 && <VolatilityLow />}
                 </div>
               )}

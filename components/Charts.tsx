@@ -26,7 +26,7 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
     const sortedData = [...financialData].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-
+    // OHLC data
     const candlestickData = sortedData.map((item) => ({
       time: item.date,
       open: item.open,
@@ -47,6 +47,7 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
         color: color,
       };
     });
+
     const volatilityData = sortedData.map((item) => ({
       time: item.date,
       value: item.volatility,
@@ -66,7 +67,7 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
         background: { type: ColorType.Solid, color: "white" },
         textColor: "black",
       },
-      width: candlestickRef.current!.clientWidth! as number,
+      width: Math.max(candlestickRef.current!.clientWidth || 400, 400),
       height: 300,
       grid: {
         vertLines: { color: "#f0f0f0" },
@@ -92,7 +93,7 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
         background: { type: ColorType.Solid, color: "white" },
         textColor: "black",
       },
-      width: volumeRef.current!.clientWidth! as number,
+      width: Math.max(volumeRef.current!.clientWidth || 400, 400),
       height: 200,
       grid: {
         vertLines: { color: "#f0f0f0" },
@@ -114,7 +115,7 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
         background: { type: ColorType.Solid, color: "white" },
         textColor: "black",
       },
-      width: volatilityRef.current?.clientWidth! as number,
+      width: Math.max(volatilityRef.current?.clientWidth || 400, 400),
       height: 200,
       grid: {
         vertLines: { color: "#f0f0f0" },
@@ -130,17 +131,17 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
     const handleResize = () => {
       if (candlestickRef.current) {
         candlestickChart.applyOptions({
-          width: candlestickRef.current.clientWidth,
+          width: Math.max(candlestickRef.current.clientWidth || 400, 400),
         });
       }
       if (volumeRef.current) {
         volumeChart.applyOptions({
-          width: volumeRef.current.clientWidth,
+          width: Math.max(volumeRef.current.clientWidth || 400, 400),
         });
       }
       if (volatilityRef.current) {
         volatilityChart.applyOptions({
-          width: volatilityRef.current.clientWidth,
+          width: Math.max(volatilityRef.current.clientWidth || 400, 400),
         });
       }
     };
@@ -164,33 +165,39 @@ export const Charts = ({ financialData, symbol }: ChartsProps) => {
   }
 
   return (
-    <div className="flex flex-col flex-wrap gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="w-full my-6">
-        <h4 className="text-md font-semibold mb-2 text-gray-700">
+        <h4 className="text-md font-bold mb-2 text-gray-800">
           {symbol} Price Chart (OHLC)
         </h4>
-        <div ref={candlestickRef} className="" />
+        <div
+          ref={candlestickRef}
+          className="w-full min-h-[300px] overflow-hidden"
+        />
       </div>
 
       <div className="w-full my-6">
-        <h4 className="text-md font-semibold mb-2 text-gray-700">
+        <h4 className="text-md font-bold mb-2 text-gray-800">
           Volume Histogram{" "}
           <span className="text-sm font-normal text-gray-500 ml-2">
             (Color: Light Blue = Low, Medium Blue = Medium, Dark Blue = High
             Volume)
           </span>
         </h4>
-        <div ref={volumeRef} className="" />
+        <div ref={volumeRef} className="w-full min-h-[200px] overflow-hidden" />
       </div>
 
       <div className="w-full my-6">
-        <h4 className="text-md font-semibold mb-2 text-gray-700">
+        <h4 className="text-md font-bold mb-2 text-gray-800">
           Daily Volatility
           <span className="text-sm font-normal text-gray-500 ml-2">
             ((High - Low) / Open) * 100
           </span>
         </h4>
-        <div ref={volatilityRef} className="" />
+        <div
+          ref={volatilityRef}
+          className="w-full min-h-[200px] overflow-hidden"
+        />
       </div>
     </div>
   );
