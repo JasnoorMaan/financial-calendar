@@ -48,16 +48,16 @@ const TradingOverview: React.FC<{ stats: TradingStats; symbol: string }> = ({
   return (
     <div className="space-y-4">
       {/* Trading Days */}
-      <div className="text-center rounded-xl p-6 border border-gray-400">
-        <div className="text-4xl lg:text-9xl font-bold mb-2">
+      <div className="bg-[#2C2C2C] text-white text-center rounded-xl p-6 border border-gray-200">
+        <div className="text-white text-4xl lg:text-9xl font-bold mb-2">
           {stats.totalTradingDays}
         </div>
-        <p className="text-lg font-bold text-gray-800">Trading Days</p>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-lg font-bold text-white">Trading Days</p>
+        <p className="text-sm text-gray-200 mt-1">
           {formatDate(stats.dateRange.start)} to{" "}
           {formatDate(stats.dateRange.end)}
         </p>
-        <div className="text-lg font-bold text-gray-800 mt-2">{symbol}</div>
+        <div className="text-lg font-bold text-white mt-2">{symbol}</div>
       </div>
 
       {/* 2x2 Grid */}
@@ -79,18 +79,18 @@ const TradingOverview: React.FC<{ stats: TradingStats; symbol: string }> = ({
           <p className="text-sm text-gray-500 mt-1">Win Rate</p>
         </div>
 
-        <div className="rounded-xl p-4 text-center border border-gray-400">
+        <div className="bg-[#C7FFA5] rounded-xl p-4 text-center border border-gray-400">
           <div className="text-3xl font-bold">
             {stats.volatility.toFixed(2)}%
           </div>
-          <p className="text-sm text-gray-500 mt-1">Daily Volatility</p>
+          <p className="text-sm text-gray-800 mt-1">Daily Volatility</p>
         </div>
 
-        <div className="rounded-xl p-4 text-center border border-gray-400">
+        <div className="bg-[#6425FE] text-white rounded-xl p-4 text-center border border-gray-200">
           <div className="text-3xl font-bold">
             {stats.sharpeRatio.toFixed(2)}
           </div>
-          <p className="text-sm text-gray-500 mt-1">Sharpe Ratio</p>
+          <p className="text-sm text-gray-100 mt-1">Sharpe Ratio</p>
         </div>
       </div>
     </div>
@@ -299,10 +299,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* API Data Section */}
       {(analystEstimates.length > 0 || priceTargets) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Analyst Estimates */}
           {analystEstimates.length > 0 && (
-            <div className="rounded-xl p-6 border border-gray-400">
+            <div className="md:col-span-3 rounded-xl p-6 border border-gray-400">
               <h3 className="text-lg font-bold text-gray-800 mb-4">
                 Analyst Estimates
               </h3>
@@ -336,7 +336,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Price Targets */}
           {priceTargets && (
-            <div className="rounded-xl p-6 border border-gray-400">
+            <div className="rounded-xl md:col-span-5 p-6 border border-gray-400">
               <h3 className="text-lg font-bold text-gray-800 mb-4">
                 Price Targets
               </h3>
@@ -360,23 +360,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <div className="text-sm text-gray-600">Low Target</div>
                 </div>
               </div>
-
-              {/* <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                <div className="text-center">
-                  <div className="font-medium text-green-600">
-                    {priceTargets.analystRatingsBuy}
-                  </div>
-                  <div className="text-gray-500">Buy</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-medium text-gray-600">
-                    {priceTargets.analystRatingsHold}
-                  </div>
-                  <div className="text-gray-500">Hold</div>
-                </div>
-              </div> */}
             </div>
           )}
+          <section className="bg-[url('/bg.webp')] col-span-4 bg-cover bg-center rounded-xl p-8 bg-no-repeat flex flex-col justify-center items-center relative">
+            <div className="flex flex-col items-center justify-center flex-1 w-full">
+              <h1 className="text-4xl md:text-5xl font-bold text-white text-center absolute top-28 left-4">
+                Refer and Earn $100 in credits
+              </h1>
+            </div>
+            <h2 className="text-md font-bold text-white absolute bottom-6 left-1/2 -translate-x-1/2 text-center w-full">
+              BloomborgTerminal
+            </h2>
+          </section>
         </div>
       )}
     </div>

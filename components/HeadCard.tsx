@@ -47,7 +47,7 @@ export const HeadCard: React.FC<HeadCardProps> = ({ stats, symbol }) => {
   return (
     <>
       <section className="flex flex-col flex-wrap items-center justify-center gap-4">
-        <section className="flex flex-col flex-wrap items-center justify-center border-2 border-blue-200 rounded-lg p-4">
+        <section className="bg-black text-white flex flex-col flex-wrap items-center justify-center border-2 border-blue-200 rounded-lg p-4">
           <h1 className="text-6xl pb-3 font-bold md:text-9xl">
             {stats.totalTradingDays}
           </h1>

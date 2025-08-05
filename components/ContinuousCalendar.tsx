@@ -362,7 +362,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   //TOP BAR
   return (
     <div className="no-scrollbar calendar-container max-h-full overflow-y-scroll rounded-t-2xl bg-white pb-10 text-slate-800 shadow-xl">
-      <div className="sticky -top-px z-50 w-full rounded-t-2xl bg-white px-5 pt-7 sm:px-8 sm:pt-8">
+      <div className="sticky -top-px z-49 w-full rounded-t-2xl bg-white px-5 pt-7 sm:px-8 sm:pt-8">
         <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap gap-2 sm:gap-3">
             <Select
@@ -434,7 +434,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
           </div>
         </div>
 
-        <div className="grid w-full grid-cols-7 justify-between text-slate-500">
+        <div className="grid w-full grid-cols-7 justify-between text-slate-500 bg-gray-50">
           {DAYS_OF_WEEK.map((day, index) => (
             <div
               key={index}
