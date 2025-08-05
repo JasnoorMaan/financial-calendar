@@ -83,19 +83,19 @@ const HeroGrid = () => {
           <div className="text-3xl font-bold">0.51</div>
           <p className="text-sm text-gray-100 mt-1">Sharpe Ratio</p>
         </div>
-        <section className="flex gap-1 flex-col items-center justify-center border-2 border-neutral-200 rounded-lg p-4">
+        <section className="bg-white flex gap-1 flex-col items-center justify-center border-2 border-neutral-200 rounded-lg p-4">
           <h2 className="text-2xl font-bold">4.069%</h2>
           <p className="text-md text-gray-500 font-semibold">
             Daily Volatility
           </p>
         </section>
-        <section className="flex gap-1 flex-col items-center justify-center border-2 border-neutral-200 rounded-lg p-4">
+        <section className="bg-white flex gap-1 flex-col items-center justify-center border-2 border-neutral-200 rounded-lg p-4">
           <h2 className="text-2xl font-bold">58.1%</h2>
           <p className="text-md text-gray-500 font-semibold">Win Rate</p>
         </section>
       </section>
 
-      <section className="col-span-7 border-2 border-neutral-200 rounded-xl p-4">
+      <section className="bg-white col-span-7 border-2 border-neutral-200 rounded-xl p-4">
         <div ref={candlestickRef} className="w-full" />
       </section>
     </section>

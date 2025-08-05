@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HeroGrid from "./HeroGrid";
 
 const Hero = () => {
@@ -9,12 +10,20 @@ const Hero = () => {
           <br />
           <span className="dancing-script-cursive">Monitor</span> your Stocks
         </h1>
-        <button className="bg-black text-lg text-white px-6 py-3 rounded-lg hover:bg-neutral-800 transition-all duration-300">
-          Go to Terminal
-        </button>
+        <Link href="/terminal">
+          <button className="bg-black text-lg text-white px-6 py-3 rounded-lg hover:bg-neutral-800 transition-all duration-300">
+            Go to Terminal
+          </button>
+        </Link>
       </div>
 
       <HeroGrid />
+      <section className="">
+        <section>
+          <section></section>
+          <section></section>
+        </section>
+      </section>
     </section>
   );
 };

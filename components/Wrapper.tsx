@@ -10,6 +10,7 @@ import { Dashboard } from "@/components/Dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Legend from "@/components/Legend";
 import Footer from "@/components/Footer";
+import Link from "next/link";
 const MONTH_NAMES = [
   "January",
   "February",
@@ -160,9 +161,9 @@ export default function Wrapper() {
         <div className="sticky top-0 z-50 bg-white flex flex-col gap-4 p-4 rounded-lg border mx-auto w-full max-w-none">
           <div className="flex items-center justify-between">
             {/* Input Stock */}
-            <h1 className="text-lg md:text-2xl font-extrabold">
+            <Link href="/" className="text-lg md:text-2xl font-extrabold">
               BloomborgTerminal©
-            </h1>
+            </Link>
             <div className="flex flex-row gap-4 flex-wrap items-center justify-center">
               <label className="text-sm text-gray-600">
                 Symbol:
