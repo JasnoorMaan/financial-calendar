@@ -1,5 +1,8 @@
 import Link from "next/link";
 import HeroGrid from "./HeroGrid";
+import { motion } from "motion/react";
+import { animate, useMotionValue, useTransform } from "motion/react";
+import { useEffect } from "react";
 
 const Hero = () => {
   return (
@@ -11,19 +14,13 @@ const Hero = () => {
           <span className="dancing-script-cursive">Monitor</span> your Stocks
         </h1>
         <Link href="/terminal">
-          <button className="bg-black text-lg text-white px-6 py-3 rounded-lg hover:bg-neutral-800 transition-all duration-300">
+          <button className="bg-[#2c2c2c] text-lg text-white px-6 py-3 rounded-lg hover:bg-neutral-800 transition-all duration-300">
             Go to Terminal
           </button>
         </Link>
       </div>
 
       <HeroGrid />
-      <section className="">
-        <section>
-          <section></section>
-          <section></section>
-        </section>
-      </section>
     </section>
   );
 };

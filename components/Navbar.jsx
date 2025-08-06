@@ -11,7 +11,7 @@ const Navbar = () => {
           Bloomborg.
         </Link>
         <Link href="/terminal">
-          <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-all duration-300">
+          <button className="bg-[#2c2c2c]  text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-all duration-300">
             Go to Terminal
           </button>
         </Link>

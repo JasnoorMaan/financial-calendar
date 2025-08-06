@@ -9,6 +9,7 @@ import {
   createChart,
   ColorType,
 } from "lightweight-charts";
+import { countUp } from "@/app/anim";
 
 const HeroGrid = () => {
   const candlestickRef = useRef<HTMLDivElement>(null);
@@ -65,7 +66,7 @@ const HeroGrid = () => {
   }, []);
   return (
     <section className="grid grid-cols-2 md:grid-cols-12 gap-2">
-      <section className="col-span-3 bg-black text-white flex flex-col flex-wrap items-center justify-center border-2 border-neutral-200 rounded-xl p-4">
+      <section className="col-span-3 bg-[#2c2c2c] text-white flex flex-col flex-wrap items-center justify-center border-2 border-black rounded-xl p-4">
         <h1 className="text-6xl pb-3 font-bold md:text-9xl">69</h1>
         <h2 className="text-2xl md:text-3xl pb-1 font-semibold">
           Trading Days

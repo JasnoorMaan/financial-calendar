@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <section className="relative mt-12 w-screen bg-black pt-4 overflow-hidden">
+    <section className="relative w-screen bg-black pt-4 overflow-hidden">
       <div
         className="absolute inset-0 bg-[url('/noise.svg')] opacity-50 pointer-events-none"
         aria-hidden="true"
