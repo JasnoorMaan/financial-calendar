@@ -9,7 +9,6 @@ import {
   createChart,
   ColorType,
 } from "lightweight-charts";
-import { countUp } from "@/app/anim";
 
 const HeroGrid = () => {
   const candlestickRef = useRef<HTMLDivElement>(null);
