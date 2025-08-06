@@ -72,7 +72,7 @@ const HeroGrid = () => {
           Trading Days
         </h2>
         <div>
-          <p className="text-md text-gray-600 pb-3 font-semibold">
+          <p className="text-md text-gray-400 pb-3 font-semibold">
             28 May 2025 to 4 Aug 2025
           </p>
         </div>
@@ -81,8 +81,8 @@ const HeroGrid = () => {
 
       <section className="col-span-2 flex flex-col flex-wrap gap-6">
         <div className="bg-[#6425FE] text-white rounded-xl p-4 text-center border border-neutral-200">
-          <div className="text-3xl font-bold">0.51</div>
-          <p className="text-sm text-gray-100 mt-1">Sharpe Ratio</p>
+          <div className="text-3xl font-semibold">0.51</div>
+          <p className="text-md text-gray-200 font-semibold">Sharpe Ratio</p>
         </div>
         <section className="bg-white flex gap-1 flex-col items-center justify-center border-2 border-neutral-200 rounded-lg p-4">
           <h2 className="text-2xl font-bold">4.069%</h2>
