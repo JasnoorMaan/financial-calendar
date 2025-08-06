@@ -1,8 +1,5 @@
 import Link from "next/link";
 import HeroGrid from "./HeroGrid";
-import { motion } from "motion/react";
-import { animate, useMotionValue, useTransform } from "motion/react";
-import { useEffect } from "react";
 
 const Hero = () => {
   return (

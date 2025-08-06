@@ -3,13 +3,7 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import Info from "@/components/Info";
-import { motion } from "motion/react";
 import Link from "next/link";
-import {
-  fadeInVariants,
-  staggerContainer,
-  staggerItem,
-} from "@/app/animations/variants";
 import Instructions from "@/components/Instructions";
 
 const Landing = () => {
@@ -42,32 +36,19 @@ const Landing = () => {
         </video>
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-        <motion.div
-          className="relative z-10 text-white text-center px-6"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <motion.h2
-            className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-            variants={staggerItem}
-          >
+        <div className="relative z-10 text-white text-center px-6">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             Intuitive trading tools <br /> Build your strategy <br />
             and track market <br /> trends, seamlessly
-          </motion.h2>
+          </h2>
           <Link href="/terminal">
-            <motion.div className="mt-12" variants={staggerItem}>
-              <motion.button
-                className="bg-white text-black px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold text-lg"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
+            <div className="mt-12">
+              <button className="bg-white text-black px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold text-lg">
                 Explore Platform
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           </Link>
-        </motion.div>
+        </div>
       </section>
 
       <Footer />
