@@ -5,25 +5,58 @@ import Navbar from "@/components/Navbar";
 import Info from "@/components/Info";
 import Link from "next/link";
 import Instructions from "@/components/Instructions";
+import { motion } from "motion/react";
 
 const Landing = () => {
   return (
     <div className="overflow-x-hidden">
-      <section className="relative bg-[url('/herobg.svg')] bg-cover bg-center bg-no-repeat min-h-screen flex flex-col">
+      <section className="relative min-h-screen flex flex-col overflow-hidden">
+        {/* Animated Background - Single entrance animation */}
+        <motion.div
+          className="absolute inset-0 bg-[url('/herobg.svg')] bg-cover bg-center bg-no-repeat"
+          initial={{
+            scale: 1.2,
+            opacity: 0,
+            x: 50,
+            y: 30,
+          }}
+          animate={{
+            scale: 1,
+            opacity: 1,
+            x: 0,
+            y: 0,
+          }}
+          transition={{
+            duration: 2.5,
+            ease: "easeOut",
+          }}
+        />
+
+        {/* Subtle overlay for better text readability */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+        />
+
         <Navbar />
-        <main className="flex-1 flex items-center justify-center mb-32">
+        <main className="relative z-10 flex-1 flex items-center justify-center mb-32">
           <Hero />
         </main>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
-      </section>
-
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+        />
+      </section>{" "}
       <section className="relative bg-white">
         <section className="min-h-[100vh]">
           <Info />
         </section>
       </section>
       <Instructions />
-
       <section className="relative min-h-screen bg-black flex items-center justify-center pt-8 mt-8">
         <video
           autoPlay
@@ -50,7 +83,6 @@ const Landing = () => {
           </Link>
         </div>
       </section>
-
       <Footer />
     </div>
   );
