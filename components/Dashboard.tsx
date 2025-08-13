@@ -223,7 +223,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [monthlyMetrics, setMonthlyMetrics] = useState<MonthlyMetrics[]>([]);
   const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
 
-  // Get additional data from unified storage
   const { analystEstimates, companyRating, priceTargets } =
     useUnifiedFinancialData();
 
@@ -238,9 +237,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
       setWeeklyMetrics(weekly);
       setMonthlyMetrics(monthly);
       setTradingStats(stats);
-
-      // Data is now available directly from unified storage
-      // No need for additional API calls
     }
   }, [financialData]);
   //Wont hit this but just in case
@@ -362,13 +358,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
             </div>
           )}
-          <section className="bg-[url('/bg.webp')] col-span-4 bg-cover bg-center rounded-xl p-8 bg-no-repeat flex flex-col justify-center items-center relative">
+          <section className="bg-[url('/bg.webp')] md:col-span-4 bg-cover bg-center rounded-xl p-8 bg-no-repeat flex flex-col justify-between items-center relative min-h-[300px]">
             <div className="flex flex-col items-center justify-center flex-1 w-full">
-              <h1 className="text-4xl md:text-5xl font-bold text-white text-center absolute top-28 left-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center px-4 leading-tight">
                 Refer and Earn $100 in credits
               </h1>
             </div>
-            <h2 className="text-md font-bold text-white absolute bottom-6 left-1/2 -translate-x-1/2 text-center w-full">
+            <h2 className="text-lg md:text-xl font-bold text-white text-center w-full mt-auto">
               BloomborgTerminal
             </h2>
           </section>

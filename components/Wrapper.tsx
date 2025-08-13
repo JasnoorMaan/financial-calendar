@@ -158,14 +158,14 @@ export default function Wrapper() {
     <>
       <div className="flex flex-col h-auto w-full gap-4 px-4 pt-4">
         {/* Header Controls */}
-        <div className="sticky top-0 z-50 bg-white flex flex-col gap-4 p-4 rounded-lg border mx-auto w-full max-w-none">
-          <div className="flex items-center justify-between">
+        <div className="sticky top-0 z-50 bg-white flex flex-col p-4 rounded-lg border mx-auto w-full max-w-none">
+          <div className="flex flex-wrap justify-center p-2 md:py-0 items-center md:justify-between">
             {/* Input Stock */}
-            <Link href="/" className="text-lg md:text-2xl font-extrabold">
+            <Link href="/" className="text-lg md:text-2xl p-2 font-extrabold">
               BloomborgTerminal©
             </Link>
-            <div className="flex flex-row gap-4 flex-wrap items-center justify-center">
-              <label className="text-sm text-gray-600">
+            <div className="flex flex-row flec-wrap gap-4 flex-wrap items-center justify-center">
+              <label className="text-sm text-gray-600 p-2">
                 Symbol:
                 <input
                   type="text"
@@ -178,7 +178,7 @@ export default function Wrapper() {
               </label>
 
               {/* Dates */}
-              <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-6 p-2 text-sm">
                 <span className="text-gray-600">
                   Start:{" "}
                   <span className="font-semibold text-black">
@@ -195,7 +195,7 @@ export default function Wrapper() {
             </div>
 
             {/* Fetch and Clear Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 p-4">
               <button
                 onClick={handleFetchData}
                 disabled={!isValidSelection || loading}
