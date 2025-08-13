@@ -361,7 +361,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <section className="bg-[url('/bg.webp')] md:col-span-4 bg-cover bg-center rounded-xl p-8 bg-no-repeat flex flex-col justify-between items-center relative min-h-[300px]">
             <div className="flex flex-col items-center justify-center flex-1 w-full">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center px-4 leading-tight">
-                Refer and Earn $100 in credits
+                Refer and Earn $1000 in credits
               </h1>
             </div>
             <h2 className="text-lg md:text-xl font-bold text-white text-center w-full mt-auto">

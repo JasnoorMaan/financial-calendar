@@ -4,7 +4,7 @@ import Landing from "./home/page";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="min-h-screen">
       <Landing />
       {/* <Wrapper /> */}
     </main>

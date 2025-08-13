@@ -18,7 +18,7 @@ const Info = () => {
 
   return (
     <section
-      className="min-h-screen flex items-center justify-center py-8 px-6 md:px-12"
+      className="min-h-screen flex items-center justify-center py-16 px-6 md:px-12"
       ref={ref}
     >
       <div className="max-w-7xl w-full">

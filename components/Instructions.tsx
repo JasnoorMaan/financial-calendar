@@ -10,7 +10,7 @@ export default function Instructions() {
 
   return (
     <div
-      className=" relative flex h-[180vh] md:h-[50rem] w-full items-center justify-center bg-white dark:bg-black"
+      className="relative flex min-h-screen w-full items-center justify-center bg-white dark:bg-black py-16"
       ref={ref}
     >
       <div
@@ -25,10 +25,10 @@ export default function Instructions() {
       {/* <p className="relative z-20 bg-gradient-to-b from-neutral-200 to-neutral-500 bg-clip-text py-8 text-4xl font-bold text-transparent sm:text-7xl">
         Backgrounds
       </p> */}
-      <section className="z-20">
-        <section className="min-h-[140vh] md:min-h-[100vh] my-4">
+      <section className="z-20 w-full max-w-7xl mx-auto px-4">
+        <section className="min-h-[80vh] py-8">
           <motion.h1
-            className="z-19 text-9xl md:text-9xl font-thin text-center text-neutral-400 py-16"
+            className="text-6xl md:text-8xl lg:text-9xl font-thin text-center text-neutral-400 py-8 md:py-16"
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={
               isInView
@@ -46,7 +46,7 @@ export default function Instructions() {
           </motion.h1>
 
           <motion.section
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-8 md:mx-16 my-12"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-8 my-12"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.3, staggerChildren: 0.2 }}

@@ -50,14 +50,12 @@ const Landing = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1 }}
         />
-      </section>{" "}
+      </section>
       <section className="relative bg-white">
-        <section className="min-h-[100vh]">
-          <Info />
-        </section>
+        <Info />
       </section>
       <Instructions />
-      <section className="relative min-h-screen bg-black flex items-center justify-center pt-8 mt-8">
+      <section className="relative min-h-screen bg-black flex items-center justify-center py-16">
         <video
           autoPlay
           loop
